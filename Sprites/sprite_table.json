@@ -1,0 +1,49 @@
+{
+	"tile": {
+		
+		"#0": {
+			"name": "Void",
+			"img": "res/tile/void.png",
+			"size": [32, 32],
+			"type": "background"
+		},
+
+		"#1": {
+			"name": "Grass",
+			"img": "res/tile/grass.png",
+			"size": [32, 32],
+			"type": "forground",
+			"col_size": [32, 32],
+			"col_pos": [0, 0]
+		},
+
+		"#2": {
+			"name": "Dirt",
+			"img": "res/tile/dirt.png",
+			"size": [32, 32],
+			"type": "forground",
+			"col_size": [32, 32],
+			"col_pos": [0, 0]
+		},
+
+		"#3": {
+			"name": "Stone",
+			"img": "res/tile/stone.png",
+			"size": [32, 32],
+			"type": "forground",
+			"col_size": [32, 32],
+			"col_pos": [0, 0]
+		}
+	},
+
+	"entity": {
+		"#0": {
+			"name": "Player",
+			"img": "res/entity/player_test.png",
+			"size": [28, 46],
+			"type": "player",
+			"col_size": [28, 46],
+			"col_pos": [0, 0]
+		}
+	}
+}

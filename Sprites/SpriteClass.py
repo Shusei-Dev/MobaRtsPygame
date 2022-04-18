@@ -13,8 +13,8 @@ class Sprite(pg.sprite.Sprite):
 
         self.surface = self.gameObj.window.screen
 
-    def newSprite(self, name, img, pos, type, prio, state=bool(), col_box_size=None, col_box_pos=None, size=None):
-        self.spriteObj = NewSprite(self, name, img, pos, type, state, prio, col_box_size, col_box_pos, size)
+    def newSprite(self, name, img, pos, type, prio, state, id, col_box_size=None, col_box_pos=None, size=None):
+        self.spriteObj = NewSprite(self, name, img, pos, type, prio, state, id, col_box_size, col_box_pos, size)
         self.spriteList.append(self.spriteObj)
         return self.spriteObj
 
@@ -32,8 +32,9 @@ class Sprite(pg.sprite.Sprite):
 
 class NewSprite(pg.sprite.Sprite):
 
-    def __init__(self, spriteClass, name, img, pos, type, prio, state=bool(), col_box_size=None, col_box_pos=None, size=None):
+    def __init__(self, spriteClass, name, img, pos, type, prio, state, id, col_box_size=None, col_box_pos=None, size=None):
         self.spriteList = []
+        self.spriteClass = spriteClass
 
         self.pos = pos
         self.posX, self.posY = pos[0], pos[1]
@@ -45,6 +46,9 @@ class NewSprite(pg.sprite.Sprite):
         self.img = self.import_image(img)
         self.origine_img = self.img
         self.state = state
+
+        self.spr_id = "#" + str(len(self.spriteClass.spriteList))
+        self.id = id
 
         self.rect = self.img.get_rect()
         self.rect.topleft = (self.posX, self.posY)
@@ -83,7 +87,7 @@ class NewSprite(pg.sprite.Sprite):
                 self.new_img = pg.Surface(self.new_size)
 
             self.empty_col_box = pg.Color(0,0,0,0)
-            self.colision_box = pg.Surface(col_box_size, flags=pg.SRCALPHA)
+            self.colision_box = pg.Surface(self.colision_box_size, flags=pg.SRCALPHA)
 
             self.colision_box.convert_alpha()
 
@@ -93,6 +97,37 @@ class NewSprite(pg.sprite.Sprite):
         
 
         self.spriteList.append(self)
+
+    def sprite_coll_with(self, direction, speed):
+
+        self.spr_col_rect = pg.Rect(self.posX, self.posY, self.colision_box_size[0], self.colision_box_size[1])
+
+        for all_sprite in self.spriteClass.spriteList:
+            self.all_spr_col_rect = pg.Rect(all_sprite.posX, all_sprite.posY, all_sprite.colision_box_size[0], all_sprite.colision_box_size[1])
+            
+            self.spr_col_rect = pg.Rect(self.posX - speed, self.posY, self.colision_box_size[0], self.colision_box_size[1])
+            if all_sprite.col_state and pg.Rect.colliderect(self.spr_col_rect, self.all_spr_col_rect) and all_sprite.spr_id != self.spr_id:
+                if self.spr_col_rect[0] >= self.all_spr_col_rect[0] and direction[0] < 0:
+                    return True
+
+            self.spr_col_rect = pg.Rect(self.posX + speed, self.posY, self.colision_box_size[0], self.colision_box_size[1])
+            if all_sprite.col_state and pg.Rect.colliderect(self.spr_col_rect, self.all_spr_col_rect) and all_sprite.spr_id != self.spr_id:
+                if self.spr_col_rect[0] <= self.all_spr_col_rect[0] and direction[0] > 0:
+                    return True
+
+            self.spr_col_rect = pg.Rect(self.posX, self.posY - speed, self.colision_box_size[0], self.colision_box_size[1])
+            if all_sprite.col_state and pg.Rect.colliderect(self.spr_col_rect, self.all_spr_col_rect) and all_sprite.spr_id != self.spr_id:
+                if self.spr_col_rect[1] >= self.all_spr_col_rect[1] and direction[1] < 0:
+                    return True
+
+            self.spr_col_rect = pg.Rect(self.posX, self.posY + speed, self.colision_box_size[0], self.colision_box_size[1])
+            if all_sprite.col_state and pg.Rect.colliderect(self.spr_col_rect, self.all_spr_col_rect) and all_sprite.spr_id != self.spr_id:
+                if self.spr_col_rect[1] <= self.all_spr_col_rect[1] and direction[1] > 0:
+                    return True
+
+
+
+        return False
 
 
     def update(self):

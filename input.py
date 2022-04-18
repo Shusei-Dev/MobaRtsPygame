@@ -6,7 +6,7 @@ class Input:
     def __init__(self, game):
 
         self.gameObj = game
-        self.inputList = {"z": False, "q": False, "s": False, "d": False}
+        self.inputList = {"z": False, "q": False, "s": False, "d": False, "up": False, "down": False, "left": False, "right" : False}
 
     def update(self):
         self.event()

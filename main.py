@@ -15,9 +15,10 @@ class Game:
         self.assets = Assets()
         self.renderer = Renderer(self)
         self.world = World(self)
-        self.world.test()
+        self.world.init_world(self.assets.mapTest)
                 
     def update(self):
+
         self.input.update()
         self.world.update(self)
         self.renderer.render()
