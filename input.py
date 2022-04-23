@@ -31,3 +31,11 @@ class Input:
     def get(self, keyValue):
 
         return self.inputList[keyValue]
+
+
+    def is_wasd_input(self):
+        for key in self.inputList:
+            if self.inputList[key]:
+                return True
+
+        return False

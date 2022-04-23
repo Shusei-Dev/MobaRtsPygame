@@ -16,7 +16,7 @@ class PlayerClass:
 
 		self.player_entity = self.gameObj.world.entityClass.newEntity("Player", self.img, self.pos, "player", self.state, self.prio, id, 4, 4, 50, (28, 48), (0, 0))
 		self.spriteObj = self.player_entity.spriteObj
-		self.spriteObj.show_col = False
+		self.spriteObj.show_col = True
 
 	def update(self, gameObj):
 		self.gameObj = gameObj

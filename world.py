@@ -79,7 +79,7 @@ class World:
         self.colision_map = self.world_file["colision_map"]
 
         self.world_map = {"tile": [], "entity": []}
-        self.show_world_col = False
+        self.show_world_col = True
 
         if not self.check_size_world():
             print("The size of the world is wrong ! Check the map json file")
@@ -113,8 +113,8 @@ class World:
 
         self.player = PlayerClass(self.gameObj, self.assets.playerTest, (32, 32), True, 2, "#0")
 
-        self.cameraClass.center_camera_world((self.world_size["width"], self.world_size["height"]), self.tile_size[0])
-        #self.cameraClass.centered_on = self.player.player_entity
+        #self.cameraClass.center_camera_world((self.world_size["width"], self.world_size["height"]), self.tile_size[0])
+        self.cameraClass.centered_on = self.player.player_entity
 
 
     def update(self, gameObj):
