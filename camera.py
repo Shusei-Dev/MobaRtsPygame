@@ -26,16 +26,20 @@ class Camera:
 			sprites.posY += self.mov_y
 
 
-	def center_camera_target(self, target_pos):
+	def center_camera_target(self, target):
 		self.gameSize = self.gameObj.window.game_size
+		self.target = target
+
 		self.window_center = (self.gameSize[0] / 2, self.gameSize[1] / 2)
+		
+		self.target_center = self.target.posX + self.target.size[0] / 2, self.target.posY + self.target.size[1] / 2
+		
 
-		self.mov_x = 0
-		self.mov_y = 0
-
+		self.center_move = (self.window_center[0] - self.target_center[0], self.window_center[1] - self.target_center[1])
+		
 		for sprites in self.gameObj.world.spriteClass.spriteList:
-			sprites.posX += self.mov_x
-			sprites.posY += self.mov_y
+			sprites.posX += self.center_move[0]
+			sprites.posY += self.center_move[1]
 
 
 	def move_camera(self, posX, posY):
@@ -64,7 +68,11 @@ class Camera:
 		if self.input.get("right"):
 			self.move_camera(4, 0)
 
+
+		if self.centered_on != None and self.input.is_wasd_input():
+			self.is_centered = False
+
 		if self.centered_on != None and self.is_centered == False:
 			print("AAA")
-			self.center_camera_target((self.centered_on.spriteObj.posX, self.centered_on.spriteObj.posY))
+			self.center_camera_target(self.centered_on.spriteObj)
 			self.is_centered = True
