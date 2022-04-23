@@ -24,7 +24,7 @@ class PlayerClass:
 
 		self.dt = self.gameObj.renderer.dt
 
-		
+		if self.input
 
 		if self.input.get("z"):
 			self.player_entity.direction = (self.player_entity.direction[0], -1)

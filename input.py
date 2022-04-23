@@ -13,6 +13,8 @@ class Input:
         pg.display.flip()
 
     def event(self):
+        self.mouse_left, self.mouse_middle, self.mouse_right = pygame.mouse.get_pressed()
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.gameObj.window.running = False
