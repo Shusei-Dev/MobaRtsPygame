@@ -10,6 +10,7 @@ class Sprite(pg.sprite.Sprite):
 
         self.spriteType = ["tile", "entity", "background"]
         self.spriteList = []
+        self.prio_sprites = []
 
         self.surface = self.gameObj.window.screen
 
@@ -20,7 +21,7 @@ class Sprite(pg.sprite.Sprite):
 
     def update(self, gameObj):
         self.gameObj = gameObj
-        self.prio_sprites = []
+       
         self.prio = 0
         while len(self.prio_sprites) != len(self.spriteList):
             for sprite in self.spriteList:
