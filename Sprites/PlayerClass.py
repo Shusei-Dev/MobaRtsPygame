@@ -13,7 +13,7 @@ class PlayerClass:
 		self.prio = prio
 		self.id = id
 
-		self.player_entity = self.gameObj.world.entityClass.newEntity("Player", self.img, self.pos, "player", self.state, self.prio, id, 4, 4, 100, (28, 48), (0, 0))
+		self.player_entity = self.gameObj.world.entityClass.newEntity("Player", self.img, self.pos, "player", self.prio, self.state, id, 4, 4, 100, (28, 48), (0, 0))
 
 		self.move_x, self.move_y = 0, 0
 		self.dis_x, self.dis_y = 0, 0

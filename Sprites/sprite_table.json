@@ -62,6 +62,19 @@
 			"col_size": [200, 148],
 			"col_pos": [0, 0],
 			"prio": 3
+		},
+		"#2": {
+			"name": "BlueCreep",
+			"img": "res/entity/minion_test.png",
+			"size": [14, 20],
+			"type": "minion",
+			"minion_type": "test",
+			"health": 60,
+			"armor": 0,
+			"team": "blue",
+			"col_size": [14, 20],
+			"col_pos": [0, 0],
+			"prio": 2
 		}
 	}
 }

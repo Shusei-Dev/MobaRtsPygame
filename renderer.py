@@ -18,5 +18,4 @@ class Renderer:
             if sprite.spriteObj.state:
                 self.screen.blit(sprite.spriteObj.img, sprite.spriteObj.rect)
 
-
         self.dt = self.gameObj.window.mainClock.tick(self.gameObj.window.fps) / 1000.0
