@@ -10,6 +10,7 @@ class Sprite(pg.sprite.Sprite):
 
         self.spriteType = ["tile", "entity", "background", "hpBar"]
         self.spriteList = []
+        self.prio_sprites = []
 
         self.surface = self.gameObj.window.screen
 
