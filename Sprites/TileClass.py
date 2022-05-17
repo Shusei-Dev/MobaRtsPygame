@@ -29,7 +29,7 @@ class newTile:
 		self.type = type
 
 		if type in self.tileType:
-			self.spriteObj = self.spriteClass.newSprite(name, img, pos, type, prio, state, id, col_box_size, col_box_pos)
+			self.spriteObj = self.spriteClass.newSprite(name, img, pos, "tile", prio, state, id, col_box_size, col_box_pos)
 
 	def set_state_col(self, col_state, show_col=False):
 		if self.spriteObj.is_colision:

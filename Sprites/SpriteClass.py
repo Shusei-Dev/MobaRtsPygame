@@ -8,7 +8,7 @@ class Sprite(pg.sprite.Sprite):
 
         self.gameObj = game
 
-        self.spriteType = ["tile", "entity", "background"]
+        self.spriteType = ["tile", "entity", "background", "hpBar"]
         self.spriteList = []
         self.prio_sprites = []
 
@@ -33,18 +33,24 @@ class Sprite(pg.sprite.Sprite):
 
 class NewSprite(pg.sprite.Sprite):
 
-    def __init__(self, spriteClass, name, img, pos, type, prio, state, id, col_box_size=None, col_box_pos=None, size=None):
+    def __init__(self, spriteClass, name, img, pos, spr_type, prio, state, id, col_box_size=None, col_box_pos=None, size=None):
         self.spriteList = []
         self.spriteClass = spriteClass
 
         self.pos = pos
         self.posX, self.posY = pos[0], pos[1]
 
-        if type in spriteClass.spriteType:
-            self.type = type
+        if spr_type in spriteClass.spriteType:
+            self.type = spr_type
 
         self.name = name
-        self.img = self.import_image(img)
+
+        if type(img) == type(pg.Surface((0, 0))):
+            self.img = img
+        else:
+            self.img = self.import_image(img)
+
+        
         self.origine_img = self.img
         self.state = state
 
@@ -60,6 +66,9 @@ class NewSprite(pg.sprite.Sprite):
             self.size = size
 
         self.priority = prio
+
+        self.colision_box_size = (0, 0)
+        self.colision_box_pos = (0, 0)
 
         if col_box_size != None and col_box_pos != None:
 
