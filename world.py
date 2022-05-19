@@ -4,6 +4,8 @@ from Sprites.EntityClass import *
 from Sprites.PlayerClass import *
 from Sprites.TileClass import *
 from Sprites.BasementClass import *
+from Sprites.CreepClass import *
+from FontSystem import *
 from camera import *
 import random, json, sys
 
@@ -18,9 +20,11 @@ class World:
         self.spriteClass = Sprite(self.gameObj)
         self.tileClass = TileClass(self.gameObj)
         self.entityClass = EntityClass(self.gameObj)
+        self.creepClass = CreepClass(self.gameObj)
         self.basementClass = BasementClass(self.gameObj)
 
         self.cameraClass = Camera(self.gameObj)
+        self.fontClass = FontClass(self.gameObj)
 
         self.worldSprites = []
 
@@ -124,7 +128,7 @@ class World:
 
             if entity["type"] == "basement":
                 entity_pos = (self.entitys_pos[entitys][0][0], self.entitys_pos[entitys][0][1])
-                self.basementClass.newBasement(entity["name"], entity["img"], entity_pos, entity["basement_type"], entity["prio"], True, entitys, entity["health"], entity["armor"], entity["team"], (entity["col_size"][0], entity["col_size"][1]), (entity["col_pos"][0], entity["col_pos"][1]))
+                self.basementClass.newBasement(entity["name"], entity["img"], entity_pos, entity["basement_type"], entity["prio"], True, entitys, entity["health"], entity["damage"], entity["armor"], entity["team"], (entity["col_size"][0], entity["col_size"][1]), (entity["col_pos"][0], entity["col_pos"][1]))
 
 
         self.cameraClass.center_camera_world((self.world_size["width"], self.world_size["height"]), self.tile_size[0])

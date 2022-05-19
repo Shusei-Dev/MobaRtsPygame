@@ -25,7 +25,7 @@ class PlayerClass:
 		self.basic_armor = 22
 		self.basic_healt = self.player_entity.health
 		self.basic_energy = 760
-		self.range_radius = 200
+		self.range_radius = 500
 
 		self.camera_centred = None
 
@@ -69,7 +69,7 @@ class PlayerClass:
 
 					if self.input.mouse_right:
 						self.entity_touch = self.get_entity_with_sprite(self.sprite_touch)
-						
+
 						self.entity_touch.looseHp(10, (self.entity_touch, self.entity_touch.hpBarObj))
 				else:
 
