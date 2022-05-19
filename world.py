@@ -3,6 +3,7 @@ from Sprites.SpriteClass import *
 from Sprites.EntityClass import *
 from Sprites.PlayerClass import *
 from Sprites.TileClass import *
+from Sprites.BasementClass import *
 from camera import *
 import random, json, sys
 
@@ -11,12 +12,13 @@ class World:
     def __init__(self, gameObj):
 
         self.gameObj = gameObj
-        
+
 
         # --Initialize all the class--
         self.spriteClass = Sprite(self.gameObj)
         self.tileClass = TileClass(self.gameObj)
         self.entityClass = EntityClass(self.gameObj)
+        self.basementClass = BasementClass(self.gameObj)
 
         self.cameraClass = Camera(self.gameObj)
 
@@ -26,7 +28,7 @@ class World:
 
         with open("Sprites/sprite_table.json", "r") as sprite_table:
             self.sprite_id_table = json.load(sprite_table)
-        
+
 
     def search_id_in_table(self, spr_id, spr_type):
         for sprite_type in self.sprite_id_table:
@@ -59,7 +61,7 @@ class World:
         for x_tile in self.tile_map:
             if len(x_tile) > x_tile_len:
                 x_tile_len = len(x_tile)
-            
+
 
         if x_tile_len == self.world_size["width"] and len(self.tile_map) == self.world_size["height"]:
             return True
@@ -71,15 +73,16 @@ class World:
         self.world_path = world_path
         with open(self.world_path, "r") as read_file:
             self.world_file = json.load(read_file)
-        
+
         self.world_size = self.world_file["map_size"]
         self.id_table = self.world_file["tiles_ids_table"]
         self.tile_map = self.world_file["tile_map"]
+        self.entity_pos = self.world_file["entitys_pos"]
         self.tile_size = (self.world_file["tiles_size"]["width"], self.world_file["tiles_size"]["height"])
         self.colision_map = self.world_file["colision_map"]
 
         self.world_map = {"tile": [], "entity": []}
-        self.show_world_col = True
+        self.show_world_col = False
 
         if not self.check_size_world():
             print("The size of the world is wrong ! Check the map json file")
@@ -111,10 +114,20 @@ class World:
                 tile_x += 1
             tile_y += 1
 
-        self.player = PlayerClass(self.gameObj, self.assets.playerTest, (32, 32), True, 2, "#0")
+
+        for entity_pos in self.entity_pos:
+            self.entity_content = self.search_id_in_table(entity_pos, "entity")
+            if self.entity_content["type"] == "basement":
+
+
+        self.minion_test = self.entityClass.newEntity("MinionTest", self.assets.minionTest, (64, 64), "minion", 2, True, "#1", 0, 0, 10, (14, 20), (0, 0))
+        self.minion_test.spriteObj.col_state = False
+        self.player = PlayerClass(self.gameObj, self.assets.playerTest, (32, 32), True, 3, "#0")
+
+
 
         #self.cameraClass.center_camera_world((self.world_size["width"], self.world_size["height"]), self.tile_size[0])
-        self.cameraClass.centered_on = self.player.player_entity
+        #self.cameraClass.centered_on = self.player.player_entity
 
 
     def update(self, gameObj):
@@ -131,6 +144,8 @@ class World:
 
         self.player.update(self.gameObj)
         self.cameraClass.update(self.gameObj)
+
+        self.prio_sprites = self.spriteClass.prio_sprites
 
         for sprite in self.worldSprites:
             sprite.update()

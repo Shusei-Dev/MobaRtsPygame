@@ -73,6 +73,5 @@ class Camera:
 			self.is_centered = False
 
 		if self.centered_on != None and self.is_centered == False:
-			print("AAA")
 			self.center_camera_target(self.centered_on.spriteObj)
 			self.is_centered = True

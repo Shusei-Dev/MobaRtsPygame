@@ -16,19 +16,15 @@ class Sprite(pg.sprite.Sprite):
 
     def newSprite(self, name, img, pos, type, prio, state, id, col_box_size=None, col_box_pos=None, size=None):
         self.spriteObj = NewSprite(self, name, img, pos, type, prio, state, id, col_box_size, col_box_pos, size)
+        if self.spriteObj.priority not in self.prio_sprites:
+            self.prio_sprites.append(self.spriteObj.priority)
+        self.prio_sprites.sort()
+
         self.spriteList.append(self.spriteObj)
         return self.spriteObj
 
     def update(self, gameObj):
         self.gameObj = gameObj
-       
-        self.prio = 0
-        while len(self.prio_sprites) != len(self.spriteList):
-            for sprite in self.spriteList:
-                if sprite.priority == self.prio:
-                    self.prio_sprites.append(sprite)
-
-            self.prio += 1
 
 
 class NewSprite(pg.sprite.Sprite):
@@ -50,7 +46,7 @@ class NewSprite(pg.sprite.Sprite):
         else:
             self.img = self.import_image(img)
 
-        
+
         self.origine_img = self.img
         self.state = state
 
@@ -104,7 +100,7 @@ class NewSprite(pg.sprite.Sprite):
         else:
             self.is_colision, self.col_state = False, False
 
-        
+
 
         self.spriteList.append(self)
 
@@ -114,7 +110,7 @@ class NewSprite(pg.sprite.Sprite):
 
         for all_sprite in self.spriteClass.spriteList:
             self.all_spr_col_rect = pg.Rect(all_sprite.posX, all_sprite.posY, all_sprite.colision_box_size[0], all_sprite.colision_box_size[1])
-            
+
             self.spr_col_rect = pg.Rect(self.posX - speed, self.posY, self.colision_box_size[0], self.colision_box_size[1])
             if all_sprite.col_state and pg.Rect.colliderect(self.spr_col_rect, self.all_spr_col_rect) and all_sprite.spr_id != self.spr_id:
                 if self.spr_col_rect[0] >= self.all_spr_col_rect[0] and direction[0] < 0:
@@ -151,7 +147,7 @@ class NewSprite(pg.sprite.Sprite):
 
                     self.img.blit(self.colision_box, self.colision_box.get_rect())
                     pg.draw.rect(self.img, (255, 0, 0), pg.Rect(self.colision_box_pos[0], self.colision_box_pos[1], self.colision_box_size[0], self.colision_box_size[1]), 1)
-                    
+
                 elif self.colision_box_size > self.size and (self.colision_box_pos[0] > 0 and self.colision_box_pos[1] > 0 or self.colision_box_pos[0] >= 0 and self.colision_box_pos[1] > 0 or self.colision_box_pos[0] > 0 and self.colision_box_pos[1] >= 0):
                     self.new_img.blit(self.img, (0, 0))
                     pg.draw.rect(self.new_img, (255, 0, 0), pg.Rect(self.colision_box_pos[0], self.colision_box_pos[1], self.colision_box_size[0], self.colision_box_size[1]), 1)
@@ -161,7 +157,7 @@ class NewSprite(pg.sprite.Sprite):
                 if self.colision_box_pos == (0, 0):
                     self.img.blit(self.colision_box, self.colision_box.get_rect())
                     pg.draw.rect(self.colision_box, (255, 0, 0), pg.Rect(self.colision_box_pos[0], self.colision_box_pos[1], self.colision_box_size[0], self.colision_box_size[1]), 1)
-                    
+
 
     def get_sprite_size(self):
         return (self.rect[2], self.rect[3])

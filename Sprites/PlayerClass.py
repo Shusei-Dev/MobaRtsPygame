@@ -13,7 +13,7 @@ class PlayerClass:
 		self.prio = prio
 		self.id = id
 
-		self.player_entity = self.gameObj.world.entityClass.newEntity("Player", self.img, self.pos, "player", self.state, self.prio, id, 4, 4, 100, (28, 48), (0, 0))
+		self.player_entity = self.gameObj.world.entityClass.newEntity("Player", self.img, self.pos, "player", self.prio, self.state, id, 4, 4, 100, (28, 48), (0, 0))
 
 		self.move_x, self.move_y = 0, 0
 		self.dis_x, self.dis_y = 0, 0
@@ -29,7 +29,7 @@ class PlayerClass:
 
 		self.camera_centred = None
 
-		
+
 
 	def update(self, gameObj):
 		self.gameObj = gameObj
@@ -59,7 +59,7 @@ class PlayerClass:
 
 					self.move_x, self.move_y = self.go_to_cursor()
 
-		
+
 		if self.sprite_touch != None:
 			if self.sprite_touch.type == "entity":
 				d = math.sqrt((self.input.mouse_pos_clicked[0] - (self.spriteObj.posX + self.spriteObj.size[0] / 2)) ** 2 + (self.input.mouse_pos_clicked[1] - (self.spriteObj.posY + self.spriteObj.size[1] / 2)) ** 2)
@@ -69,7 +69,7 @@ class PlayerClass:
 
 					if self.input.mouse_right:
 						self.entity_touch = self.get_entity_with_sprite(self.sprite_touch)
-						print(self.entity_touch)
+						
 						self.entity_touch.looseHp(10, (self.entity_touch, self.entity_touch.hpBarObj))
 				else:
 
@@ -91,11 +91,11 @@ class PlayerClass:
 
 		self.dis_x = int(abs(self.input.mouse_pos_clicked[0] - self.spriteObj.posX))
 		self.dis_y = int(abs(self.input.mouse_pos_clicked[1] - self.spriteObj.posY))
-		
+
 		if self.dis_x <= 2 and self.dis_y <= 2:
 			self.move_x, self.move_y = 0, 0
 			self.player_entity.direction = (0, 0)
-			
+
 
 		if self.input.get("y"):
 			if self.gameObj.world.cameraClass.centered_on != None and self.camera_centred == True:
@@ -103,7 +103,7 @@ class PlayerClass:
 
 			if self.gameObj.world.cameraClass.centered_on == None and self.camera_centred == False:
 				self.gameObj.world.cameraClass.centered_on = self.player_entity
-				
+
 		if self.input.get("y") == False:
 			if self.gameObj.world.cameraClass.centered_on == None:
 				self.camera_centred = False
@@ -136,7 +136,7 @@ class PlayerClass:
 						sprite_touch = all_sprite
 		if sprite_touch != None:
 			return sprite_touch
-				
+
 
 	def get_entity_with_sprite(self, sprite):
 		for entity in self.gameObj.world.entityClass.entityList:

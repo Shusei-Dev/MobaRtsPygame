@@ -43,14 +43,14 @@ class Entity:
 		self.hpBarObj = HpBar(self.health, self.spriteClass, name, pos, self.spriteObj.size, 5, state, id)
 
 		self.update()
-		
+
 	def update_entityClass(self, entityClass):
 		self.entityClass = entityClass
 
 	def update(self):
 
 		self.entityList = self.entityClass.entityList
-		
+
 		self.spriteObj.update()
 		self.hpBarObj.getSpritePos(self.spriteObj.posX, self.spriteObj.posY)
 		self.isEntityMoving()
@@ -61,13 +61,12 @@ class Entity:
 
 	def looseHp(self, hp, entity_target):
 		entity_actual_hp = 0
-		
+
 		for entity in self.entityList:
 			if entity.spriteObj.type != "hpBar" and entity.spriteObj.spr_id == entity_target[0].spriteObj.spr_id:
 				entity.actual_health -= hp
 				entity_actual_hp = entity.actual_health
 			else:
-				print(entity.type)
 				entity_target[1].changeHpBar(entity_actual_hp)
 
 	def regenHp(self, hp, entity_target):
@@ -83,7 +82,7 @@ class Entity:
 class HpBar:
 
 	def __init__(self, health, spriteClass, name, pos, size, prio, state, id):
-		
+
 		self.hpBarMaxLen = 100
 
 		self.health = health
@@ -91,7 +90,7 @@ class HpBar:
 		self.type = "hpBar"
 		self.spriteClass = spriteClass
 
-		
+
 		self.hpBarSize = (100, 12)
 		self.hpBarSurface = pg.Surface(self.hpBarSize)
 		self.hpBarSurface.fill((0, 255, 0))
@@ -110,11 +109,10 @@ class HpBar:
 		pg.draw.rect(self.hpBarSurface, (0, 255, 0), self.hpRect)
 		self.spriteObj.img = self.hpBarSurface
 		self.spriteObj.update()
-		
+
 
 	def update(self):
 		self.spriteObj.posX = self.spritePos[0] - (self.hpBarSize[0] / 2) + (self.spriteSize[0] / 2)
 		self.spriteObj.posY = self.spritePos[1] - 20
 
 		self.spriteObj.update()
-
