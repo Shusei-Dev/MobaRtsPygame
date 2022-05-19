@@ -9,6 +9,8 @@ class Camera:
 		self.centered_on = None
 		self.is_centered = False
 
+		self.move_speed_cam = 8
+
 	def center_camera_world(self, world_size, tile_size):
 		self.gameSize = self.gameObj.window.game_size
 		self.worldSize = (world_size[0] * tile_size, world_size[1] * tile_size)
@@ -33,11 +35,11 @@ class Camera:
 		self.window_center = (self.gameSize[0] / 2, self.gameSize[1] / 2)
 		
 		self.target_center = self.target.posX + self.target.size[0] / 2, self.target.posY + self.target.size[1] / 2
-		
 
 		self.center_move = (self.window_center[0] - self.target_center[0], self.window_center[1] - self.target_center[1])
 		
 		for sprites in self.gameObj.world.spriteClass.spriteList:
+
 			sprites.posX += self.center_move[0]
 			sprites.posY += self.center_move[1]
 
@@ -68,8 +70,21 @@ class Camera:
 		if self.input.get("right"):
 			self.move_camera(4, 0)
 
+		if self.centered_on == None and self.is_centered == False:
+			if self.input.mouse_pos[1] < 50:
+				self.move_camera(0, self.move_speed_cam)
 
-		if self.centered_on != None and self.input.is_wasd_input():
+			if self.input.mouse_pos[1] > self.gameObj.window.game_size[1] - 50:
+				self.move_camera(0, -self.move_speed_cam)
+
+			if self.input.mouse_pos[0] < 50:
+				self.move_camera(self.move_speed_cam, 0)
+
+			if self.input.mouse_pos[0] > self.gameObj.window.game_size[0] - 50:
+				self.move_camera(-self.move_speed_cam, 0)
+
+
+		if self.centered_on != None and self.centered_on.isMoving:
 			self.is_centered = False
 
 		if self.centered_on != None and self.is_centered == False:

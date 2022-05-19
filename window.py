@@ -13,11 +13,11 @@ class Window:
         self.screen_size = (pg.display.Info().current_w, pg.display.Info().current_h)
         self.screen = pg.display.set_mode(self.game_size)
 
-        self.fps = 1200
+        self.fps = 60
         self.showFps = False
         self.mainClock = pg.time.Clock()
 
-        self.gameName = "GestionGame"
+        self.gameName = "MobaRtsPygame"
         self.gameVersion = 0.1
         pg.display.set_caption(self.gameName + str(self.gameVersion))
 

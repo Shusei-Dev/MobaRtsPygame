@@ -37,13 +37,13 @@ class World:
                     if sprite_id == spr_id:
                         return self.sprite_id_table[sprite_type][sprite_id]
 
-    def create_tile_with_id(self, id, pos, prio):
+    def create_tile_with_id(self, id, pos):
 
         self.tile_info = self.search_id_in_table(id, "tile")
         if self.tile_info["type"] == "background":
-            return self.tileClass.newTile(self.tile_info["name"], self.tile_info["img"], pos, self.tile_info["type"], prio, True, id)
+            return self.tileClass.newTile(self.tile_info["name"], self.tile_info["img"], pos, self.tile_info["type"], self.tile_info["prio"], True, id)
         else:
-            return self.tileClass.newTile(self.tile_info["name"], self.tile_info["img"], pos, self.tile_info["type"], prio, True, id, (self.tile_info["col_size"][0], self.tile_info["col_size"][1]) , (self.tile_info["col_pos"][0], self.tile_info["col_pos"][1]))
+            return self.tileClass.newTile(self.tile_info["name"], self.tile_info["img"], pos, self.tile_info["type"], self.tile_info["prio"], True, id, (self.tile_info["col_size"][0], self.tile_info["col_size"][1]) , (self.tile_info["col_pos"][0], self.tile_info["col_pos"][1]))
 
     def get_id_with_table(self, nmb, table):
         for e in table:
@@ -79,6 +79,7 @@ class World:
         self.tile_map = self.world_file["tile_map"]
         self.entity_pos = self.world_file["entitys_pos"]
         self.tile_size = (self.world_file["tiles_size"]["width"], self.world_file["tiles_size"]["height"])
+        self.entitys_pos = self.world_file["entitys_pos"]
         self.colision_map = self.world_file["colision_map"]
 
         self.world_map = {"tile": [], "entity": []}
@@ -93,7 +94,8 @@ class World:
             tile_x = 0
             self.world_map["tile"].append([])
             for x in self.tile_map[self.tile_map.index(y)]:
-                self.world_map["tile"][tile_y].append(self.create_tile_with_id(self.get_id_with_table(x, self.id_table), (self.tile_size[0] * tile_x, self.tile_size[1] * tile_y), 1))
+
+                self.world_map["tile"][tile_y].append(self.create_tile_with_id(self.get_id_with_table(x, self.id_table), (self.tile_size[0] * tile_x, self.tile_size[1] * tile_y)))
                 tile_x += 1
             tile_y += 1
 
@@ -114,20 +116,19 @@ class World:
                 tile_x += 1
             tile_y += 1
 
+        for entitys in self.entitys_pos:
+            entity = self.search_id_in_table(entitys, "entity")
+            if entity["type"] == "player":
+                entity_pos = (self.entitys_pos[entitys][0][0], self.entitys_pos[entitys][0][1])
+                self.player = PlayerClass(self.gameObj, entity["img"], entity_pos, True, 2, entitys)
 
-        for entity_pos in self.entity_pos:
-            self.entity_content = self.search_id_in_table(entity_pos, "entity")
-            if self.entity_content["type"] == "basement":
+            if entity["type"] == "basement":
+                entity_pos = (self.entitys_pos[entitys][0][0], self.entitys_pos[entitys][0][1])
+                self.basementClass.newBasement(entity["name"], entity["img"], entity_pos, entity["basement_type"], entity["prio"], True, entitys, entity["health"], entity["armor"], entity["team"], (entity["col_size"][0], entity["col_size"][1]), (entity["col_pos"][0], entity["col_pos"][1]))
 
 
-        self.minion_test = self.entityClass.newEntity("MinionTest", self.assets.minionTest, (64, 64), "minion", 2, True, "#1", 0, 0, 10, (14, 20), (0, 0))
-        self.minion_test.spriteObj.col_state = False
-        self.player = PlayerClass(self.gameObj, self.assets.playerTest, (32, 32), True, 3, "#0")
+        self.cameraClass.center_camera_world((self.world_size["width"], self.world_size["height"]), self.tile_size[0])
 
-
-
-        #self.cameraClass.center_camera_world((self.world_size["width"], self.world_size["height"]), self.tile_size[0])
-        #self.cameraClass.centered_on = self.player.player_entity
 
 
     def update(self, gameObj):
@@ -135,12 +136,14 @@ class World:
 
         self.addSpritestoList(self.tileClass.tileList)
         self.addSpritestoList(self.entityClass.entityList)
+        self.addSpritestoList(self.basementClass.basementList)
 
         self.dt = self.gameObj.renderer.dt
 
         self.spriteClass.update(self.gameObj)
         self.tileClass.update(self.gameObj)
         self.entityClass.update(self.gameObj)
+        self.basementClass.update(self.gameObj)
 
         self.player.update(self.gameObj)
         self.cameraClass.update(self.gameObj)
