@@ -50,6 +50,7 @@ class Entity:
 	def update(self):
 
 		self.entityList = self.entityClass.entityList
+		self.gameObj = self.entityClass.gameObj
 
 		self.spriteObj.update()
 		self.hpBarObj.getSpritePos(self.spriteObj.posX, self.spriteObj.posY)

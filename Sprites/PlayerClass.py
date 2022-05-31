@@ -25,7 +25,7 @@ class PlayerClass:
 		self.basic_armor = 22
 		self.basic_healt = self.player_entity.health
 		self.basic_energy = 760
-		self.range_radius = 500
+		self.range_radius = 200
 
 		self.camera_centred = None
 

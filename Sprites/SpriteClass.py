@@ -8,7 +8,7 @@ class Sprite(pg.sprite.Sprite):
 
         self.gameObj = game
 
-        self.spriteType = ["tile", "entity", "background", "hpBar"]
+        self.spriteType = ["tile", "entity", "background", "hpBar", "text"]
         self.spriteList = []
         self.prio_sprites = []
 
@@ -65,6 +65,8 @@ class NewSprite(pg.sprite.Sprite):
 
         self.colision_box_size = (0, 0)
         self.colision_box_pos = (0, 0)
+
+        self.isNotMoveble = False
 
         if col_box_size != None and col_box_pos != None:
 

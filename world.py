@@ -5,9 +5,9 @@ from Sprites.PlayerClass import *
 from Sprites.TileClass import *
 from Sprites.BasementClass import *
 from Sprites.CreepClass import *
-from FontSystem import *
+from Sprites.FontClass import *
 from camera import *
-import random, json, sys
+import random, json, sys, numpy as np
 
 class World:
 
@@ -33,6 +33,11 @@ class World:
         with open("Sprites/sprite_table.json", "r") as sprite_table:
             self.sprite_id_table = json.load(sprite_table)
 
+        self.gameTime = {"minutes": 0, "seconds": 0}
+        self.gameTimeStr = "00:00"
+        self.maxGameTime = "99:60"
+
+        self.fpsStr = f"{self.gameObj.window.mainClock.get_fps():2.0f} FPS"
 
     def search_id_in_table(self, spr_id, spr_type):
         for sprite_type in self.sprite_id_table:
@@ -89,6 +94,10 @@ class World:
         self.world_map = {"tile": [], "entity": []}
         self.show_world_col = False
 
+        self.fontClass.addText("timeText", self.gameTimeStr, "Arial", 16, (255, 255, 255), (self.gameObj.window.game_size[0] - 65 , 20))
+        self.fontClass.addText("fpsCounter", self.fpsStr, "Arial", 15, (255, 255, 255), (5 , 10))
+
+
         if not self.check_size_world():
             print("The size of the world is wrong ! Check the map json file")
             sys.exit()
@@ -134,6 +143,27 @@ class World:
         self.cameraClass.center_camera_world((self.world_size["width"], self.world_size["height"]), self.tile_size[0])
 
 
+    def update_gameTime(self):
+        if np.around(self.gameTime["seconds"]) >= 60:
+            self.gameTime["seconds"] = 0
+            self.gameTime["minutes"] += 1
+        else:
+            self.gameTime["seconds"] += self.dt
+
+        self.gameTimeSeconde, self.gameTimeMinutes = "", ""
+
+        if int(np.around(self.gameTime["seconds"])) <= 9:
+            self.gameTimeSeconde = f'0{int(np.around(self.gameTime["seconds"]))}'
+        elif int(np.around(self.gameTime["seconds"])) >= 10:
+            self.gameTimeSeconde = f'{int(np.around(self.gameTime["seconds"]))}'
+
+        if int(np.around(self.gameTime["minutes"])) <= 9:
+            self.gameTimeMinutes = f'0{self.gameTime["minutes"]}:'
+        elif int(np.around(self.gameTime["minutes"])) >= 10:
+            self.gameTimeMinutes = f'{self.gameTime["minutes"]}:'
+
+        self.gameTimeStr =  self.gameTimeMinutes + self.gameTimeSeconde
+
 
     def update(self, gameObj):
         self.gameObj = gameObj
@@ -141,6 +171,7 @@ class World:
         self.addSpritestoList(self.tileClass.tileList)
         self.addSpritestoList(self.entityClass.entityList)
         self.addSpritestoList(self.basementClass.basementList)
+        self.addSpritestoList(self.fontClass.textList)
 
         self.dt = self.gameObj.renderer.dt
 
@@ -149,8 +180,15 @@ class World:
         self.entityClass.update(self.gameObj)
         self.basementClass.update(self.gameObj)
 
+        self.update_gameTime()
+        self.fpsStr = f"{self.gameObj.window.mainClock.get_fps():2.0f} FPS"
+        self.fontClass.change_text("timeText", self.gameTimeStr)
+        self.fontClass.change_text("fpsCounter", self.fpsStr)
+
         self.player.update(self.gameObj)
+        self.fontClass.update(self.gameObj)
         self.cameraClass.update(self.gameObj)
+
 
         self.prio_sprites = self.spriteClass.prio_sprites
 

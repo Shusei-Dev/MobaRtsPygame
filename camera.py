@@ -24,8 +24,9 @@ class Camera:
 		self.camera_pos = (self.mov_x, self.mov_y)
 
 		for sprites in self.gameObj.world.spriteClass.spriteList:
-			sprites.posX += self.mov_x
-			sprites.posY += self.mov_y
+			if sprites.isNotMoveble == False:
+				sprites.posX += self.mov_x
+				sprites.posY += self.mov_y
 
 
 	def center_camera_target(self, target):
@@ -33,11 +34,11 @@ class Camera:
 		self.target = target
 
 		self.window_center = (self.gameSize[0] / 2, self.gameSize[1] / 2)
-		
+
 		self.target_center = self.target.posX + self.target.size[0] / 2, self.target.posY + self.target.size[1] / 2
 
 		self.center_move = (self.window_center[0] - self.target_center[0], self.window_center[1] - self.target_center[1])
-		
+
 		for sprites in self.gameObj.world.spriteClass.spriteList:
 
 			sprites.posX += self.center_move[0]
@@ -48,8 +49,9 @@ class Camera:
 		self.camera_pos = (self.camera_pos[0] + posX, self.camera_pos[1] + posY)
 
 		for sprites in self.gameObj.world.spriteClass.spriteList:
-			sprites.posX += posX
-			sprites.posY += posY
+			if not sprites.isNotMoveble:
+				sprites.posX += posX
+				sprites.posY += posY
 
 
 	def update(self, gameObj):
