@@ -61,10 +61,12 @@ class Entity:
 			self.isMoving = True
 
 	def looseHp(self, hp, entity_target):
+
 		entity_actual_hp = 0
 
 		for entity in self.entityList:
 			if entity.spriteObj.type != "hpBar" and entity.spriteObj.spr_id == entity_target[0].spriteObj.spr_id:
+				
 				entity.actual_health -= hp
 				entity_actual_hp = entity.actual_health
 			else:
