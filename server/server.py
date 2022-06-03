@@ -6,39 +6,55 @@ from time import ctime
 import threading
 import socket
 
+from data_base import *
+
 
 class TCPRequestHandler(StreamRequestHandler):
     def setup(self) -> None:
         self.cmdPrompt = CommandPrompt()
+        self.database = DataBase()
         return super().setup()
 
     def handle(self) -> None:
         # Get the connection of a client
         client_ip = self.client_address[0]
+        self.client_login_state = "0"
         print("connected from " + client_ip)
 
         # Get what send the client
-        client_send_data_line = self.rfile.readline().strip()
-        client_data_str = client_send_data_line.decode('utf-8')
+        while True:
+            client_send_data_line = self.rfile.readline().strip()
+            client_data_str = client_send_data_line.decode('utf-8')
 
-        # Check what current login_state is the client
-        if "login_state" in getCDisVar(client_data_str) and getCDisVar(client_data_str)["login_state"] in ["1", "2"]:
-            self.client_login_state = getCDisVar(client_data_str)["login_state"]
-            self.wfile.write(b"1")
+            # Check what current login_state is the client
+            if self.client_login_state in ["0", "1", "2"]:
+                if "login_state" in getCDisVar(client_data_str) and getCDisVar(client_data_str)["login_state"] in ["1", "2"]:
+                    self.client_login_state = getCDisVar(client_data_str)["login_state"]
+                    print("A client is gonna try to connect to the server")
+                    self.wfile.write(b"1")
 
-        client_send_data_line = self.rfile.readline().strip()
-        client_data_str = client_send_data_line.decode('utf-8')
+                if self.client_login_state == "1" and "user_name" in getCDisVar(client_data_str):
+                    self.client_login_username = getCDisVar(client_data_str)["user_name"]
+                    self.wfile.write(b"2")
 
-        if self.client_login_state == "1" and "user_name" in getCDisVar(client_data_str):
-            print("AAAAAAA")
+                if self.client_login_state == "1" and "user_password" in getCDisVar(client_data_str):
+                    self.client_login_password = getCDisVar(client_data_str)["user_password"]
+                    if self.database.check_user(self.client_login_username, self.client_login_password):
+                        self.client_login_state = 3
+                        print(f"A client({self.client_login_username}) has been connected to the server with success !")
+                        self.wfile.write(b"3")
+                    else:
+                        self.client_login_state = 0
+                        self.wfile.write(b"4")
+                        break
 
 
 
-        #self.cmdPrompt.check_cmd(client_data_str, tcp_server)
+            if self.client_login_state == 3:
+                print("AAAAA")
+                self.cmdPrompt.check_cmd(client_data_str, tcp_server)
+                self.wfile.write((client_data_str).encode('utf-8'))
 
-        # Send to the client data
-        #curr_time = ctime()
-        #self.wfile.write((curr_time + ' - ' + client_data_str).encode('utf-8'))
 
     def finish(self) -> None:
         return super().finish()
