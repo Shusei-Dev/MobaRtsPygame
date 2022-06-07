@@ -56,7 +56,7 @@
 			"size": [200, 148],
 			"type": "basement",
 			"basement_type": "base",
-			"health": 400,
+			"health": 1000,
 			"damage": 0,
 			"armor": 30,
 			"team": "blue",

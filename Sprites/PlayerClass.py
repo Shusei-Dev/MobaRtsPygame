@@ -13,7 +13,7 @@ class PlayerClass:
 		self.prio = prio
 		self.id = id
 
-		self.player_entity = self.gameObj.world.entityClass.newEntity("Player", self.img, self.pos, "player", self.prio, self.state, id, 4, 4, 100, (28, 48), (0, 0))
+		self.player_entity = self.gameObj.world.entityClass.newEntity("Player", self.img, self.pos, "player", self.prio, self.state, id, 4, 6, 100, (28, 48), (0, 0))
 
 		self.move_x, self.move_y = 0, 0
 		self.dis_x, self.dis_y = 0, 0
@@ -25,7 +25,7 @@ class PlayerClass:
 		self.basic_armor = 22
 		self.basic_healt = self.player_entity.health
 		self.basic_energy = 760
-		self.range_radius = 200
+		self.range_radius = 50
 
 		self.camera_centred = None
 
@@ -71,6 +71,7 @@ class PlayerClass:
 						self.entity_touch = self.get_entity_with_sprite(self.sprite_touch)
 
 						self.entity_touch.looseHp(10, (self.entity_touch, self.entity_touch.hpBarObj))
+						print(self.entity_touch.actual_health)
 				else:
 
 					if self.spriteObj.posX < self.input.mouse_pos_clicked[0]:

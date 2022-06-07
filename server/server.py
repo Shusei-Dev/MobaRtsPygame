@@ -28,7 +28,7 @@ class TCPRequestHandler(StreamRequestHandler):
 
             # Check what current login_state is the client
             if self.client_login_state in ["0", "1", "2"]:
-                if "login_state" in getCDisVar(client_data_str) and getCDisVar(client_data_str)["login_state"] in ["1", "2"]:
+                if "login_state" in getCDisVar(client_data_str) and getCDisVar(client_data_str)["login_state"] == "1":
                     self.client_login_state = getCDisVar(client_data_str)["login_state"]
                     print("A client is gonna try to connect to the server")
                     self.wfile.write(b"1")
@@ -42,16 +42,35 @@ class TCPRequestHandler(StreamRequestHandler):
                     if self.database.check_user(self.client_login_username, self.client_login_password):
                         self.client_login_state = 3
                         print(f"A client({self.client_login_username}) has been connected to the server with success !")
+                        connected_client.append(self.client_login_username)
                         self.wfile.write(b"3")
                     else:
                         self.client_login_state = 0
                         self.wfile.write(b"4")
                         break
 
+                if  "login_state" in getCDisVar(client_data_str) and getCDisVar(client_data_str)["login_state"] == "2":
+                    self.client_login_state = getCDisVar(client_data_str)["login_state"]
+                    print("A client is gonna try to register to the server")
+                    self.wfile.write(b"1")
 
+                if self.client_login_state == "2" and "user_name" in getCDisVar(client_data_str):
+                    self.client_login_username = getCDisVar(client_data_str)["user_name"]
+                    self.wfile.write(b"2")
 
-            if self.client_login_state == 3:
-                print("AAAAA")
+                if self.client_login_state == "2" and "user_password" in getCDisVar(client_data_str):
+                    self.client_login_password = getCDisVar(client_data_str)["user_password"]
+                    if self.database.add_user(self.client_login_username, self.client_login_password):
+                        self.client_login_state = 0
+                        print(f"A client({self.client_login_username}) created an account with success !")
+                        self.wfile.write(b"3")
+                    else:
+                        self.client_login_state = 0
+                        self.wfile.write(b"4")
+                        break
+
+            print(connected_client)
+            if self.client_login_state == 3 and "user_password" not in getCDisVar(client_data_str):
                 self.cmdPrompt.check_cmd(client_data_str, tcp_server)
                 self.wfile.write((client_data_str).encode('utf-8'))
 
@@ -65,6 +84,8 @@ class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
 def getCDisVar(cd=str()):
     if "=" in cd:
         data_var_list = cd.split("=")
+    else:
+        return ""
 
     if len(data_var_list) == 2:
         c = 0
@@ -78,7 +99,7 @@ def getCDisVar(cd=str()):
 class CommandPrompt():
 
     def __init__(self):
-        self.cmdDict = {"close": self.close_server}
+        self.cmdDict = {"close_server": self.close_server, "admin": self.admin_cmd}
 
     def check_cmd(self, data, server):
         self.dataList = data.split()
@@ -89,9 +110,10 @@ class CommandPrompt():
 
     def close_server(self, server):
         print("Closing the server...")
-        server.shutdown()
+        server._BaseServer__shutdown_request = True
 
-
+    def admin_cmd(self, server, data):
+        pass
 
 
 def create_tcp_server():
@@ -101,7 +123,9 @@ def create_tcp_server():
     socketserver.TCPServer.allow_reuse_address = True
 
     global tcp_server
+    global connected_client
     tcp_server = ThreadedTCPServer((server_host, server_port_number), TCPRequestHandler)
+    connected_client = []
     tcp_running_message = 'TCP server is started on host \'' + server_host + ':' + str(server_port_number) + '\'\r\n'
     print(tcp_running_message)
     try:

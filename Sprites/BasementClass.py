@@ -1,4 +1,4 @@
-
+from Sprites.CreepClass import *
 
 class BasementClass:
 
@@ -9,7 +9,7 @@ class BasementClass:
 		self.basementClassByType = {"base": newBase}
 		self.basementList = []
 
-		self.creepClass = self.gameObj.world.creepClass
+		self.creepClass = CreepClass(self.gameObj)
 
 	def newBasement(self, name, img, pos, basement_type, prio, state, id, health, damage, armor, team, col_box_size=None, col_box_pos=None):
 		self.basementEntity = self.basementClassByType[basement_type](self, self.creepClass, name, img, pos, "minion", prio, state, id, health, armor, team, col_box_size, col_box_pos)
@@ -18,7 +18,7 @@ class BasementClass:
 
 	def update(self, gameObj):
 		self.gameObj = gameObj
-		self.creepClass = self.gameObj.world.creepClass
+		self.creepClass.update(self.gameObj)
 
 		for basement_entity in self.basementList:
 			basement_entity.update_Class(self)

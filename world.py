@@ -20,7 +20,6 @@ class World:
         self.spriteClass = Sprite(self.gameObj)
         self.tileClass = TileClass(self.gameObj)
         self.entityClass = EntityClass(self.gameObj)
-        self.creepClass = CreepClass(self.gameObj)
         self.basementClass = BasementClass(self.gameObj)
 
         self.cameraClass = Camera(self.gameObj)
