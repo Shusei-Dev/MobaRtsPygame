@@ -49,13 +49,12 @@ class newBase:
 
 
 	def update(self):
+		self.entityObj.update()
+
 		self.health = self.entityObj.health
 		self.actual_health = self.entityObj.actual_health
 		self.gameObj = self.basementClass.gameObj
 		self.gameTime = self.gameObj.world.gameTime
 
-
-		if self.gameTime["minutes"] == 1 and self.gameTime["seconds"] == 30:
-			self
-
-		self.spriteObj.update()
+		if self.gameTime["minutes"] == 0 and round(self.gameTime["seconds"]) == 5:
+			self.creepClass.newCreep("test", "res/entity/minion_test.png", (self.spriteObj.posX + (self.spriteObj.size[0] / 2) - 5, self.spriteObj.posY - (self.spriteObj.size[1] / 2)), "soldier", 3, True, "#2", 30, 10, 0, 25, "blue")

@@ -53,6 +53,7 @@ class Client:
                 self.tcp_client.sendall(("user_password=" + self.client_data + '\r\n').encode('utf-8'))
 
             self.response_server = self.getServerDataAll()
+            print(self.response_server)
             if self.response_server == "3":
                 print("You have been connected !")
                 self.login_state = 3
