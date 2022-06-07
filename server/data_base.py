@@ -43,3 +43,4 @@ class DataBase:
 db = DataBase()
 
 db.add_user("Test", "test")
+db.add_user("Toto", "titi")

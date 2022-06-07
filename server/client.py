@@ -11,7 +11,7 @@ class Client:
     def __init__(self):
         self.server_host = 'localhost'
         self.server_port_number = 9999
-        self.buffer_size = 10
+        self.buffer_size = 1024
 
         self.login_state = 0 # 0 -> Not Connected, 1 -> Try to log-in, 2 -> Sign-in, 3 -> Connected
         self.main_loop()
@@ -53,10 +53,11 @@ class Client:
                 self.tcp_client.sendall(("user_password=" + self.client_data + '\r\n').encode('utf-8'))
 
             self.response_server = self.getServerDataAll()
+            print(self.response_server)
             if self.response_server == "3":
                 print("You have been connected !")
                 self.login_state = 3
-                self.tcp_client.sendall(("login_state=" + str(self.login_state) + '\r\n').encode('utf-8'))
+                #self.tcp_client.sendall(("login_state=" + str(self.login_state) + '\r\n').encode('utf-8'))
 
             elif self.response_server == "4":
                 print("Your information is not correct ! !")
@@ -77,7 +78,6 @@ class Client:
 
             # Send the client data to the server
             self.tcp_client.sendall((client_data + '\r\n').encode('utf-8'))
-            print('putain')
 
             # Get the return content of the server
             server_data_all = self.getServerDataAll()
@@ -88,16 +88,7 @@ class Client:
     def getServerDataAll(self):
         server_data_all = ''
         server_data = self.tcp_client.recv(self.buffer_size).decode('utf-8').strip()
-
-
-        if len(server_data)  1:
-            while len(server_data) > 0:
-                server_data_all += server_data
-                server_data = self.tcp_client.recv(self.buffer_size).decode('utf-8').strip()
-
-            return server_data_all
-        else:
-            return str(server_data)
+        return str(server_data)
 
 if __name__ == "__main__":
     client = Client()
